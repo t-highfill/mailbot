@@ -1,0 +1,43 @@
+#ifndef __TIMER__
+#define __TIMER__
+
+unsigned long timer_interval = 1000;
+int timer_reps = 0;
+bool timer_running = false;
+task timer(){
+	timer_running=true;
+	do{
+		Wait(timer_interval);
+		timer_reps--;
+	}while(timer_reps>0);
+	timer_running=false;
+}
+
+void _start_timer(){
+	if(! timer_running){
+		StartTask(timer);
+		until(timer_running);
+	}
+}
+
+void start_timer(unsigned long time, int reps=0){
+	timer_interval=time;
+	timer_reps=reps;
+	_start_timer();
+}
+
+void stop_timer_soft(){
+	if(timer_running){
+		timer_reps = 0;
+		while(timer_running){}
+	}
+}
+
+void stop_timer_hard(){
+	if(timer_running){
+		StopTask(timer);
+		timer_running=false;
+	}
+}
+
+#endif //__TIMER__

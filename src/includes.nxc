@@ -1,0 +1,6 @@
+#ifndef __INCLUDES__
+#define __INCLUDES__
+
+#include "Timer.nxc"
+
+#endif //__INCLUDES__

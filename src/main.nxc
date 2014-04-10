@@ -1,0 +1,6 @@
+#include "includes.nxc"
+
+task main(){
+	_start_timer();
+	while(timer_running){}
+}
