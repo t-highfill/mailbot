@@ -1,0 +1,142 @@
+#ifndef __DIJKSTRA__
+#define __DIJKSTRA__
+
+#define INFINITY -1.0
+#define NULL_ID -1
+#define NULL_NAME "NULL"
+#define copyArr(from, arr) {int _len=ArrayLen(arr);ArraySubset(from, arr, 0, _len);}
+
+struct Node{
+	string name;
+	unsigned int id;
+};
+
+Node buildNode(string name, unsigned int id){
+	Node n;
+	n.name=name;
+	n.id=id;
+	return n;
+}
+
+Node nullNode(){
+	return buildNode(NULL_NAME, NULL_ID);
+}
+
+struct Graph{
+	Node nodes[];
+	float map[][];
+};
+
+Graph buildGraph(Node nodes[], float map[][]){
+	Graph g;
+	g.nodes=nodes;
+	g.map=map;
+	return g;
+}
+
+float min(float dist1, float dist2){
+	if(dist1==dist2) return dist1;
+	if(dist1==INFINITY) return dist2;
+	if(dist2==INFINITY) return dist1;
+	if(dist1<dist2) return dist1;
+	return dist2;
+}
+
+Node min_dist(const Node& nodes[], const float& dist[]){
+	if(ArrayLen(nodes)==0) return nullNode();
+	Node res=nodes[0];
+	float winner=dist[res.id];
+	for(int i=1; i<ArrayLen(nodes); i++){
+		Node curr = nodes[i];
+		float d = dist[curr];
+		if(min(winner,d)==d){
+			winner=d;
+			res=curr;
+		}
+	}
+	return res;
+}
+
+int indexNode(const Node& nodes[], const Node item){
+	for(int i=0; i<ArrayLen(nodes); i++){
+		if(nodes[i].id==item.id){
+			return i;
+		}
+	}
+	return -1;
+}
+
+void removeNode(Node& src[], Node item){
+	int len=ArrayLen(src);
+	Node tmp[];
+	int idx=0;
+	for(int i=0; i<len; i++){
+		if(src[i].id != item.id){
+			tmp[idx]=src[i];
+			idx++;
+		}
+	}
+	src=tmp;
+}
+
+Node findNodeById(const Node& nodes[], int id){
+	int len = ArrayLen(nodes);
+	for(int i=0; i<len; i++){
+		if(nodes[i].id==id){
+			return nodes[i];
+		}
+	}
+	return nullNode();
+}
+
+void neighbors(Node& out[], const Node n, const Graph graph){
+	Node tmp[];
+	int len = ArrayLen(graph.nodes), idx=0;
+	for(int i=0; i<len; i++){
+		if(graph.map[n.id][i]!=INFINITY){
+			tmp[idx] = findNodeById(graph.nodes, i);
+			idx++;
+		}
+	}
+	out=tmp;
+}
+
+void dijkstra(const Graph& graph, Node& previous[], //...
+	const Node source, const Node dest){
+	Node null = nullNode();
+	int node_len = ArrayLen(graph.nodes);
+	float dist[node_len];
+	//Initialize Node distances in graph
+	//This causes an error for some reason.
+	for(int i=0; i < node_len; i++){
+		Node n = graph.nodes[i];
+		dist[n.id]=INFINITY;
+		previous[n.id] = null;
+	}
+	dist[source.id]=0;//Distance to the source is zero
+	Node Q[];
+	copyArr(Q, graph.nodes);
+	while(ArrayLen(Q)!=0){
+		Node u=min_dist(Q,dist);
+		if(u.id == dest.id)return;
+		removeNode(Q,u);
+		if(dist[u.id]==INFINITY)break;
+		Node u_neighbors[];
+		neighbors(u_neighbors, u, graph);
+		for(int i=0; i<ArrayLen(u_neighbors); i++){
+			Node v = u_neighbors[i];
+			if(indexNode(Q,v)>=0){//v must be in Q
+				//Calculate length of this route to v
+				float alt = dist[u.id]+graph.map[u.id][v.id];
+				//Compare it to shortest known distance to v
+				if(min(alt,dist[v.id])==alt){
+					dist[v.id] = alt;
+					previous[v.id] = u;
+					//TODO: "heapify-down" according to wikipedia
+				}
+			}
+		}
+	}
+}
+
+#endif 

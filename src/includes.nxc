@@ -2,5 +2,6 @@
 #define __INCLUDES__
 
 #include "Timer.nxc"
+#include "Dijkstra.nxc"
 
 #endif //__INCLUDES__
