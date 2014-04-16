@@ -1,6 +1,7 @@
 #include "includes.nxc"
 
 task main(){
-	_start_timer();
+	start_lineFollow();
+	start_timer(5000);
 	while(timer_running){}
 }

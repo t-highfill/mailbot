@@ -1,0 +1,28 @@
+#ifndef __LINE_FOLLOW__
+#define __LINE_FOLLOW__
+
+bool lineFollow_running = false;
+task lineFollow(){
+	init_sensors();
+	lineFollow_running=true;
+	while(lineFollow_running){
+		int left=READ_LEFT_LIGHT, right=READ_RIGHT_LIGHT;
+		if(left<right){//left is darker than right
+			arc_turn_l();
+		}else if(right<left){
+			arc_turn_r();
+		}else{
+			OnFwd(BOTH_MOTORS,MOVE_SPEED);
+		}
+	}
+	lineFollow_running=false;
+}
+
+void start_lineFollow(){
+	if(!lineFollow_running){
+		StartTask(lineFollow);
+		until(lineFollow_running);
+	}
+}
+
+#endif //__LINE_FOLLOW__

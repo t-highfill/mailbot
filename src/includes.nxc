@@ -4,4 +4,37 @@
 #include "Timer.nxc"
 #include "Dijkstra.nxc"
 
+#define LEFT_LIGHT IN_1
+#define RIGHT_LIGHT IN_2
+#define COLOR IN_3
+#define ULTRASONIC IN_4
+
+#define READ_LEFT_LIGHT SENSOR_1
+#define READ_RIGHT_LIGHT SENSOR_2
+#define READ_COLOR SENSOR_3
+#define READ_ULTRASONIC SENSOR_4
+
+#define LEFT_MOTOR OUT_C
+#define RIGHT_MOTOR OUT_B
+#define BOTH_MOTORS OUT_BC
+
+#define MOVE_SPEED 75
+
+void arc_turn_l(){
+	OnFwd(RIGHT_MOTOR,MOVE_SPEED);
+}
+
+void arc_turn_r(){
+	OnFwd(LEFT_MOTOR,MOVE_SPEED);
+}
+
+void init_sensors(){
+	SetSensorType(LEFT_LIGHT, SENSOR_TYPE_LIGHT);
+	SetSensorType(RIGHT_LIGHT, SENSOR_TYPE_LIGHT);
+	SetSensorType(COLOR, SENSOR_TYPE_COLORFULL);
+	SetSensorUltrasonic(ULTRASONIC);
+}
+
+#include "lineFollow.nxc"
+
 #endif //__INCLUDES__
