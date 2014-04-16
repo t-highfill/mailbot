@@ -22,6 +22,10 @@ Node nullNode(){
 	return buildNode(NULL_NAME, NULL_ID);
 }
 
+unsigned int nodeArrLen(Node arr[]){
+	return ArrayLen(arr);
+}
+
 struct Graph{
 	Node nodes[];
 	float map[][];
@@ -91,7 +95,7 @@ Node findNodeById(const Node& nodes[], int id){
 
 void neighbors(Node& out[], const Node n, const Graph graph){
 	Node tmp[];
-	int len = ArrayLen(graph.nodes), idx=0;
+	int len = nodeArrLen(graph.nodes), idx=0;
 	for(int i=0; i<len; i++){
 		if(graph.map[n.id][i]!=INFINITY){
 			tmp[idx] = findNodeById(graph.nodes, i);
@@ -104,8 +108,8 @@ void neighbors(Node& out[], const Node n, const Graph graph){
 void dijkstra(const Graph& graph, Node& previous[], //...
 	const Node source, const Node dest){
 	Node null = nullNode();
-	int node_len = ArrayLen(graph.nodes);
-	float dist[node_len];
+	int node_len = nodeArrLen(graph.nodes);
+	float dist[];
 	//Initialize Node distances in graph
 	//This causes an error for some reason.
 	for(int i=0; i < node_len; i++){
